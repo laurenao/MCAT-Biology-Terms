@@ -1,172 +1,1493 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Greetings</title>
-
+    <title>Enhanced Biology Flashcards</title>
     <style>
-
-
-        body{
-            font-variant-caps: all-petite-caps;
-
-
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .widget {
-            padding: 5px 5px ;
-            color: #7BD3EA;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-container {
             display: flex;
-            justify-content:center;
-            align-items:center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .study-container {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .flashcard {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            min-height: 300px;
+            display: flex;
             flex-direction: column;
-            max-width: 95%;
-            margin: auto;
-            border: 3px solid #A1EEBD;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
             border-radius: 5px;
-            box-shadow: 2px 2px 1px 0px #F6F7C4;
-
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background-color: #fff;
+            color: #333;
+            border: 2px solid #ddd;
         }
 
-           
-        .greet{
-            font-size: 3em;
+        .btn:hover:not(:disabled) {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
         }
 
-        .date {
-      
-            font-family: monospace;
-            font-size: 2em;
+        .btn.active {
+            background-color: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
         }
 
-        .clock {
-            font-family: monospace;
-            font-size: 2em;
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .time {
-            display: inline-block;
-            min-width: 20px;
+        .search-container {
+            margin-bottom: 1rem;
         }
 
-        .colon {
-            font-size: 1em;
-            display: inline-block;
+        .search-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
         }
 
-     
+        .system-list {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
 
+        .system-item {
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
 
+        .system-item:hover {
+            background-color: #f0f2f5;
+        }
 
+        .system-item.active {
+            background-color: #2c3e50;
+            color: white;
+        }
 
+        .progress-container {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #2c3e50;
+            transition: width 0.3s ease;
+        }
+
+        .custom-set-container {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .study-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>Biology Flashcards</h1>
+        </div>
 
+        <div class="mode-selector">
+            <button class="btn active" id="flashcardMode">Flashcards</button>
+            <button class="btn" id="quizMode">Quiz</button>
+            <button class="btn" id="spacedMode">Spaced Repetition</button>
+        </div>
 
-
-
-<div class="container>">
-    <div class="widget">
-
-            <div class="greet" id="greet"></div>
-
-                <div class="date" id="date"></div>
-                <div class="clock">
-                    <div class="time" id="hour"></div>
-                    <div class="colon">:</div>
-                    <div class="time" id="min"></div>
-                    <div class="colon">:</div>
-                    <div class="time" id="sec"></div>
+        <div class="study-container">
+            <div class="sidebar">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search terms...">
                 </div>
-           
 
-        
+                <h3>Biological Systems</h3>
+                <ul class="system-list" id="systemList">
+                    <li class="system-item" data-system="cellular">Cellular Biology</li>
+		    <li class="system-item" data-system="reproductive">Reproductive System</li>
+	            <li class="system-item" data-system="embryology">Embryology & Development</li>
+                    <li class="system-item" data-system="nervous">Nervous System</li>
+		    <li class="system-item" data-system="endocrine">Endocrinology</li>
+                    <li class="system-item" data-system="respiratory">Respiratory System</li>
+                    <li class="system-item" data-system="circulatory">Circulatory System</li>
+                    <li class="system-item" data-system="immune">Immune System</li>
+                    <li class="system-item" data-system="digestive">Digestive System</li>
+                    <li class="system-item" data-system="skeletal">Skeletal System</li>
+                    <li class="system-item" data-system="genetics">Genetics</li>
+		    <li class="system-item active" data-system="all">All Terms</li>
+</ul>
 
+                <div class="progress-container">
+                    <h3>Progress</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <p id="progressText">0% Complete</p>
+                </div>
+
+                <div class="custom-set-container">
+                    <h3>Custom Sets</h3>
+                    <button class="btn" id="createSetBtn">Create New Set</button>
+                    <ul class="custom-sets" id="customSets"></ul>
+                </div>
+            </div>
+
+            <div class="main-content" id="mainContent">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+        </div>
     </div>
-</div>
-        
 
-
-
-<script>
-
-function dispalyGreetings(today){
-        hrs = today.getHours();
-        name="Ashley"
-        if (hrs < 12)
-            greet = 'Good Morning  '+name;
-        else if (hrs >= 12 && hrs <= 17)
-            greet = 'Good Afternoon '+name;
-        else if (hrs >= 17 && hrs <= 24)
-            greet = 'Good Evening  '+name;
-        document.getElementById('greet').innerHTML = greet;
-
-    }
-
-    function dispalyDate(today) {  
+    <script>
+        const flashcards = [
+            { term: "Abductor", definition: "A muscle that moves a limb away from the center of the body." },
+            { term: "Absorption", definition: "The process by which substances are taken up into or across tissues." },
+            { term: "Acetylcholine", definition: "A neurotransmitter found throughout the nervous system (somatic motor neurons, preganglionic parasympathetic and sympathetic nerves, and postganglionic parasympathetic neurons); metabolized by acetylcholinesterase." },
+            { term: "Acrosome", definition: "The large vesicle at the head of a sperm cell containing enzymes that degrade the ovum cell membrane to allow fertilization." },
+            { term: "Actin", definition: "A protein found in the cytoskeleton and muscle cells; it is the principal constituent of the thin filaments and microfilaments." },
+            { term: "Action potential", definition: "An abrupt change in the membrane potential of a nerve or muscle caused by changes in membrane ionic permeability; results in conduction of an impulse in nerves or contraction in muscles." },
+            { term: "Active immunity", definition: "An immune response (antibody production or cellular immunity) acquired in response to exposure to an antigen." },
+            { term: "Active site", definition: "Substrate-binding region of an enzyme." },
+            { term: "Adaptation", definition: "The development of characteristics that enable an organism to survive and reproduce in its habitat." },
+            { term: "Adaptive immunity", definition: "Highly specific form of immunity that retains chemical memory of each invader encountered and is able to tailor the immune response to the specific pathogen." },
+            { term: "Adaptive radiation", definition: "The evolutionary process by which one species gives rise to several species, each specialized for different niches." },
+            { term: "Adductor", definition: "A muscle that moves a limb toward the center of the body." },
+            { term: "Adenine", definition: "A purine base present in DNA and RNA; it forms hydrogen bonds with thymine and uracil." },
+            { term: "Adenosine triphosphate (ATP)", definition: "A nucleotide molecule consisting of adenine, ribose, and three phosphate moieties; the outer two phosphates are bound by high-energy bonds." },
+            { term: "Adipose", definition: "Refers to fatty tissue, fat-storing tissue, or fat within cells." },
+            { term: "Aerobic", definition: "Refers to a biological process that occurs in the presence of molecular oxygen (O₂) or to organisms that cannot live without molecular oxygen." },
+            { term: "Afferent (sensory) neuron", definition: "A neuron that picks up impulses from sensory receptors and transmits them toward the central nervous system." },
+            { term: "Agranulocyte", definition: "Type of leukocyte that does not contain cytoplasmic granules, including lymphocytes and monocytes." },
+            { term: "Albumin", definition: "Protein synthesized in the liver that maintains the oncotic pressure of the blood and serves as a carrier for many drugs and hormones." },
+            { term: "Allantois", definition: "One of four embryonic membranes; it contains the growing embryo's waste products." },
+            { term: "Allele", definition: "Alternative forms of the same gene coding for a particular trait; alleles segregate during meiosis." },
+            { term: "Allergy", definition: "A type of autoimmunity in which a person's immune system becomes over-activated by common substances in the environment." },
+            { term: "Alveolus", definition: "Basic functional unit of the lung; a tiny sac specialized for passive gas exchange between the lungs and the blood." },
+            { term: "Amino acids", definition: "The building blocks of proteins, each containing an amino group, a carboxylic acid group, and a side chain (or R group) attached to the α-carbon." },
+            { term: "Amnion", definition: "The innermost fluid-filled embryonic membrane; it forms a protective sac surrounding the embryos of birds, reptiles, and mammals." },
+            { term: "Amplification", definition: "Characteristic of a signaling cascade, in which the binding of a single peptide hormone to a membrane-bound receptor results in a signal that increases in strength through the signaling cascade." },
+            { term: "Anaerobic", definition: "Refers to a biological process that can occur without oxygen or to organisms that can live without molecular oxygen." },
+            { term: "Anaphase", definition: "The stage of mitosis or meiosis characterized by the migration of chromatids or homologous chromosomes to opposite poles of the dividing cell." },
+            { term: "Androgen", definition: "Any male sex hormone, such as testosterone." },
+            { term: "Antibiotic", definition: "Substance that kills or inhibits the growth of bacteria or fungi (usually by disrupting cell wall assembly or by binding to ribosomes, thus inhibiting protein synthesis)." },
+            { term: "Antibody", definition: "Immune or protective protein whose synthesis is induced by the presence of foreign substances (antigens) in the body; each antibody binds to a specific antigen in an immune response; also called immunoglobulin." },
+            { term: "Antigen", definition: "A substance that binds to an antibody; may be foreign or a self-antigen." },
+            { term: "Antigen-binding region", definition: "Portion of an antibody that is specific for a particular antigen; the area of the antibody to which the antigen binds." },
+            { term: "Aortic valve", definition: "One of the semilunar valves, separating the left ventricle from the aorta." },
+            { term: "Apoptosis", definition: "Process by which a cell undergoes programmed cell death in a highly organized manner in response to either external or internal signals." },
+            { term: "Appendicular skeleton", definition: "Peripheral portion of the skeleton consisting of arms, legs, and pelvic and pectoral girdles." },
+            { term: "Archenteron", definition: "The central cavity in the gastrula stage of embryological development; it is lined by endoderm and ultimately gives rise to the adult digestive tract." },
+            { term: "Arterioles", definition: "Small arterial structures that link the arteries to the capillaries." },
+            { term: "Artery", definition: "Thick-walled, muscular blood vessel that generally carries blood away from the heart." },
+            { term: "Articular cartilage", definition: "Cartilaginous coating at the ends of bones that provides a smooth surface for articulation of bones within a joint." },
+            { term: "Asexual reproduction", definition: "Any reproductive process that does not involve the fusion of gametes (such as budding)." },
+            { term: "Asters", definition: "Star-shaped structures that form around the centrosome during mitosis." },
+            { term: "Atrium", definition: "One of two paired structures on either side of the heart, into which blood returning from either the body (right atrium) or the lungs (left atrium) flows." },
+            { term: "Autocrine", definition: "Form of cell–cell communication in which a cell releases a substance that then binds to the membrane of the releasing cell to either inhibit or activate a cellular activity." },
+            { term: "Autoimmunity", definition: "Inappropriate immune response that targets self-antigens." },
+            { term: "Autonomic nervous system", definition: "Subdivision of the peripheral nervous system responsible for involuntary activities, which is further subdivided into the parasympathetic and sympathetic nervous systems." },
+            { term: "Autosome", definition: "Any chromosome other than a sex chromosome." },
+            { term: "Axial skeleton", definition: "Midline structures of the skeleton including the skull, vertebral column, and rib cage; provides the central framework of the body." },
+            { term: "Axon", definition: "The long fiber of a neuron; it conducts impulses away from the cell body toward the synapse." },
+            { term: "Axon hillock", definition: "Transition point between the cell body (soma) and the axon of a neuron; the site of action potential initiation." },
+            { term: "Bacillus", definition: "Rod-shaped bacterium." },
+            { term: "Bacteriophage", definition: "A virus that invades bacteria and sometimes uses bacterial RNA and ribosomes to self-replicate." },
+            { term: "Basophil", definition: "Type of granulocytic leukocyte that largely participates in allergic reactions and local inflammation." },
+            { term: "Bile", definition: "A solution of salts, pigments, and cholesterol produced by the liver and stored in the gallbladder; it emulsifies large fat droplets when secreted into the small intestine via the bile duct." },
+            { term: "Bilirubin", definition: "Product of the breakdown of hemoglobin that is modified to a more soluble form in the liver." },
+            { term: "Binary fission", definition: "A type of asexual reproduction characteristic of prokaryotes in which there is equal nuclear and cytoplasmic division." },
+            { term: "Blastocoel", definition: "The fluid-filled central cavity of the blastula." },
+            { term: "Blastocyst", definition: "A mammalian blastula, consisting of the trophoblastic cells and an inner cell mass." },
+            { term: "Blastopore", definition: "Opening of the archenteron to the external environment in the gastrula stage of embryonic development." },
+            { term: "Blastula", definition: "The early embryonic stage during which the embryo is a hollow, fluid-filled sphere of undifferentiated cells." },
+            { term: "Blastulation", definition: "Process by which a solid mass of early embryonic cells, known as the morula, becomes the blastula, a hollow fluid-filled sphere of undifferentiated cells." },
+            { term: "Bohr effect", definition: "Changes in the affinity of hemoglobin for oxygen caused by changes in the environment; when pH is low (increased concentration of hydrogen ions), the oxyhemoglobin dissociation curve shifts right, indicating a decreased affinity of hemoglobin for oxygen and more efficient off-loading of oxygen from hemoglobin." },
+            { term: "Bolus", definition: "An initial dose of medication; in the digestive system, chewed food leaving the mouth, traveling through the esophagus, and entering the stomach." },
+            { term: "Bone marrow", definition: "Central portion of bones, especially long bones, that contains fat and developing blood cells, including erythrocytes, leukocytes, and megakaryocytes." },
+            { term: "Bone matrix", definition: "Organic and inorganic minerals that provide strength to compact bone; organic components include collagen, glycoproteins, and other peptides; inorganic components include calcium, phosphate, and hydroxide ions (in hydroxyapatite)." },
+            { term: "Bowman's capsule", definition: "The cup-like structure of the nephron; it collects the glomerular filtrate and channels it into the proximal convoluted tubule." },
+            { term: "Bronchi", definition: "Tube-like passages for air that connect the trachea to the bronchioles." },
+            { term: "Bronchioles", definition: "Passageways for air that start at the bronchi, dividing into continuously smaller passageways that eventually lead to the alveoli, where gas exchange occurs." },
+            { term: "Brush-border enzymes", definition: "Group of enzymes present on the luminal surface of cells lining the duodenum that break down larger biomolecules into monomers that are able to be absorbed." },
+            { term: "Bundle of His", definition: "Part of the conduction system of the heart; it carries impulses from the AV node to the ventricles." },
+            { term: "Callus", definition: "Area of excessive deposition of keratin in response to repeated strain due to friction." },
+            { term: "Canaliculi", definition: "Small canals connecting lacunae within the bone matrix with Haversian canals, allowing for the flow of nutrients and wastes." },
+            { term: "Capillary", definition: "Small, thin-walled blood vessel where gas, nutrient, and waste exchange occurs between blood and tissues." },
+            { term: "Capsid", definition: "Protein coat surrounding a virus." },
+            { term: "Cardiac output", definition: "Total blood volume pumped by the left ventricle in one minute, found by multiplying the heart rate by the stroke volume." },
+            { term: "Cartilage", definition: "A firm, elastic, translucent connective tissue produced by cells called chondrocytes." },
+            { term: "Catabolism", definition: "The chemical breakdown of complex substances (macromolecules) to yield simpler substances and energy." },
+            { term: "Cecum", definition: "The first part of the large intestine; accepts material flowing through the ileocecal valve and is the point of attachment of the appendix." },
+            { term: "Cell body", definition: "Portion of a neuron where the nucleus, endoplasmic reticulum, and ribosomes are located; also known as the soma." },
+            { term: "Cell theory", definition: "A foundational belief in modern biology that all living things are composed of cells, that the cell is the basic functional unit of life, that all cells arise from preexisting cells, and that DNA is the genetic material." },
+            { term: "Cell-mediated immunity", definition: "Type of immunity that uses cytotoxic chemicals released from cells to cause death of cells that have been infected by viruses." },
+            { term: "Central nervous system (CNS)", definition: "The brain and spinal cord." },
+            { term: "Centriole", definition: "A small organelle in the cytoplasm of animal cells; it organizes the spindle apparatus during mitosis or meiosis." },
+            { term: "Centromere", definition: "The area of a chromosome where sister chromatids are joined; it is also the point of attachment to the spindle fiber during mitosis and meiosis." },
+            { term: "Centrosomes", definition: "Paired cylindrical organelles, located in the cytoplasm, that contain the centrioles." },
+            { term: "Cerebellum", definition: "The section of the mammalian hindbrain that controls muscle coordination and equilibrium." },
+            { term: "Cerebral cortex", definition: "The outer layer of the forebrain, consisting of grey matter; it is the site of higher cognitive functions in humans." },
+            { term: "Cervix", definition: "Lower end of the uterus that marks the transition between the vagina and the uterus." },
+            { term: "Chemical digestion", definition: "Enzymatic cleavage of chemical bonds within foodstuffs, resulting in smaller molecules." },
+            { term: "Chemotaxis", definition: "Movement of cells toward or away from a chemical within the environment." },
+            { term: "Chiasmata", definition: "Sites where crossing over occurs between homologous chromosomes during meiosis." },
+            { term: "Chief cells", definition: "Cells within the stomach that secrete pepsinogen, a zymogen that is converted to its active form, pepsin, by the acidic environment of the stomach." },
+            { term: "Chondrin", definition: "Elastic cartilage matrix substance secreted by chondrocytes." },
+            { term: "Chondrocyte", definition: "A differentiated cartilage cell that synthesizes the cartilaginous matrix." },
+            { term: "Chromatid", definition: "Each of the two chromosomal strands formed by DNA replication in the S phase of the cell cycle; held together by the centromere." },
+            { term: "Chromosome", definition: "A filamentous body found within the nucleus of a eukaryotic cell or nucleoid region of a prokaryotic cell, composed of DNA." },
+            { term: "Chylomicron", definition: "Soluble lipid molecule that consists of triglycerides and esterified cholesterol molecules; absorbed into lacteals from the digestive tract." },
+            { term: "Chyme", definition: "Aqueous mixture of food and secretions that leaves the stomach to enter the duodenum." },
+            { term: "Cilia", definition: "Projection from a cell involved in movement of materials on the outside of the cell." },
+            { term: "Circadian rhythm", definition: "A behavioral pattern based on a 24-hour cycle, related to cycling of hormones such as cortisol and melatonin." },
+            { term: "Cleavage", definition: "A series of mitotic divisions of the zygote immediately following fertilization, resulting in progressively smaller cells with increased nucleus-to-cytoplasm ratios." },
+            { term: "Clonal selection", definition: "Phenomenon in which only B- or T-cells specific to a particular pathogen are activated." },
+            { term: "Coccus", definition: "Spherically shaped bacterium." },
+            { term: "Codominance", definition: "A genetic effect in which the phenotype of a heterozygote is a distinct reflection of both alleles at a particular locus." },
+            { term: "Competent", definition: "Describes a cell capable of responding to induction signals." },
+            { term: "Conjugation", definition: "The temporary joining of two organisms via a tube called a pilus, through which genetic material is exchanged; a form of sexual reproduction used by bacteria." },
+            { term: "Connective tissue", definition: "Animal tissue composed of cells lying in an extracellular proteinaceous network that supports, connects, and surrounds the organs and structures of the body." },
+            { term: "Constant region", definition: "Portion of an antibody molecule that is not variable and participates in the binding of other immune modulators." },
+            { term: "Convergent evolution", definition: "The process by which unrelated organisms living in a similar environment develop analogous structures." },
+            { term: "Corona radiata", definition: "Layer of cells surrounding an oocyte that aids in the development of the ovum." },
+            { term: "Corpus luteum", definition: "The remnant of the ovarian follicle, which after ovulation continues to secrete progesterone. Its degeneration leads to menstruation; it also maintains the uterine lining during pregnancy." },
+            { term: "Cortex", definition: "The external layer found in many organs of the body, including the brain, adrenal glands, and kidney." },
+            { term: "Cortical reaction", definition: "Release of calcium ions by an ovum after fertilization, resulting in the creation of a fertilization membrane, a structure that prevents fertilization of an ovum by multiple sperm cells." },
+            { term: "Corticosteroids", definition: "Steroid hormones produced in the adrenal cortex, including glucocorticoids (cortisol), mineralocorticoids (aldosterone), and cortical sex hormones." },
+            { term: "Crossing over", definition: "The exchange of genetic material between homologous chromosomes during meiosis." },
+            { term: "Cyclic adenosine monophosphate (cAMP)", definition: "An intracellular second messenger in the signaling cascade initiated by a peptide hormone; synthesized from ATP by adenylate cyclase." },
+            { term: "Cytokine", definition: "Chemical substance that stimulates inflammation and recruits additional immune cells to a specific area." },
+            { term: "Cytokinesis", definition: "The division and distribution of parent cell cytoplasm to the two daughter cells during mitotic and meiotic cell division." },
+            { term: "Cytoplasm", definition: "The fluid and solutes within a cell membrane, external to the nucleus and cellular organelles." },
+            { term: "Cytotoxic T-cell", definition: "T-cell that seeks out infected cells and induces apoptosis in these cells to prevent spread of the pathogen." },
+             { term: "Deletion", definition: "A type of genetic mutation in which some variable amount of DNA is removed." },
+            { term: "Dendrite", definition: "The portion of a neuron that receives stimuli and conveys them toward the cell body." },
+            { term: "Dermis", definition: "The layer of skin cells under the epidermis. Contains sweat glands, hair follicles, fat, and blood vessels." },
+            { term: "Determinate cleavage", definition: "Rapid mitotic divisions occurring in an embryo that result in cells with predetermined fates; these cells are only capable of differentiating into certain kinds of tissues within an organism." },
+            { term: "Determination", definition: "Designation of a cell within an embryo as having a particular future function." },
+            { term: "Diaphragm", definition: "Thin, muscular structure that divides the thorax from the abdomen and provides the driving force for inhalation." },
+            { term: "Diaphysis", definition: "Cylindrical shaft of a long bone." },
+            { term: "Diastole", definition: "The period of relaxation of cardiac muscle during which the atrioventricular valves open and the ventricles fill with blood." },
+            { term: "Differentiation", definition: "The process by which unspecialized cells become specialized. Involves selective transcription of the genome." },
+            { term: "Digestion", definition: "The breakdown of macromolecular nutrient material via mechanical and chemical means to simple molecular building blocks; this facilitates absorption." },
+            { term: "Diploid", definition: "Having two chromosomes of each type per cell; symbolized by 2n." },
+            { term: "Direct hormone", definition: "Substance secreted into the bloodstream that causes a change in the physiological activity of cells without requiring an intermediary." },
+            { term: "Directional selection", definition: "Selective pressures favor the development of an extreme phenotype that provides a selective advantage; this phenotype emerges as the primary phenotype over time." },
+            { term: "Disruptive selection", definition: "Type of selection in which selective pressures favor extreme phenotypes over the norm." },
+            { term: "Divergent evolution", definition: "A process of change whereby organisms with a common ancestor evolve dissimilar structures (such as dolphin flippers and human arms)." },
+            { term: "Dominant", definition: "Refers to an allele that requires only one copy for expression." },
+            { term: "Ductus arteriosus", definition: "Fetal structure that shunts blood from the pulmonary artery to the aorta to bypass the developing lungs." },
+            { term: "Ductus venosus", definition: "Shunt from the umbilical vein to the inferior vena cava, allowing oxygenated blood returning from the placenta to bypass the liver and enter the systemic circulation." },
+            { term: "Duodenum", definition: "First segment of the small intestine; the contents of the stomach and the pancreatic and bile ducts empty into it; site of digestion and some absorption." },
+            { term: "Ectoderm", definition: "Outermost embryonic germ layer; it gives rise to the skin, nervous system, inner ear, lens of the eye, and other structures." },
+            { term: "Effector", definition: "An organ, muscle, or gland used by an organism to respond to a stimulus." },
+            { term: "Efferent (motor) neuron", definition: "A neuron that transmits nervous impulses from the central nervous system to an effector." },
+            { term: "Embryo", definition: "An organism at the early developmental stage; in humans, the term refers to the first eight weeks after fertilization." },
+            { term: "Endocrine", definition: "A form of cell–cell communication that involves the secretion of hormones into the bloodstream by ductless glands; these hormones then travel to distant locations within the organism to cause a change in cellular activity." },
+            { term: "Endoderm", definition: "Innermost embryonic germ layer; it later gives rise to the linings of the alimentary canal and of the digestive and respiratory organs." },
+            { term: "Endometrium", definition: "Uterine lining that is regenerated each month in preparation for implantation of an embryo; absence of an embryo results in sloughing off of the endometrium in a process known as menstruation." },
+            { term: "Endoplasmic reticulum", definition: "Membrane-bound channels in the cytoplasm that transport proteins and lipids to various parts of the cell." },
+            { term: "Endothelium", definition: "Lining of blood vessels consisting of endothelial cells." },
+            { term: "Enteric nervous system", definition: "Collection of neurons within the gastrointestinal tract that governs peristalsis." },
+            { term: "Eosinophil", definition: "Type of granulocytic leukocyte that largely participates in the immune response against parasites; also involved in the pathogenesis of allergies." },
+            { term: "Epidermis", definition: "The outermost layer of the skin." },
+            { term: "Epididymis", definition: "The coiled tube in which sperm gain motility and are stored after production in the testes." },
+            { term: "Epiglottis", definition: "The small flap of cartilage that covers the glottis during swallowing, preventing food from entering the larynx." },
+            { term: "Epinephrine", definition: "A hormone synthesized by the adrenal medulla; it stimulates the fight-or-flight response; also a neurotransmitter in the sympathetic nervous system." },
+            { term: "Epiphyseal plate", definition: "Cartilaginous structure in the epiphysis where growth occurs." },
+            { term: "Epiphysis", definition: "Dilated end of a long bone." },
+            { term: "Episomes", definition: "A specialized subset of plasmids capable of integrating into the genome of bacteria under specific circumstances." },
+            { term: "Epithelium", definition: "The cellular layer that covers internal and external surfaces of body structures and cavities." },
+            { term: "Erythrocyte", definition: "Red blood cell; a biconcave, disc-shaped cell that contains hemoglobin and has no nucleus." },
+            { term: "Esophagus", definition: "Portion of the alimentary canal connecting the pharynx and the stomach." },
+            { term: "Eukaryote", definition: "A unicellular or multicellular organism composed of cells that contain a membrane-bound nucleus and other membrane-bound organelles." },
+            { term: "Evolution", definition: "The changes in the gene pool from one generation to the next caused by mutation, nonrandom mating, natural selection, and genetic drift." },
+            { term: "Exocrine glands", definition: "Glands that release their secretions into ducts (such as the parts of the liver and sweat glands)." },
+            { term: "Expressivity", definition: "Varying expression of disease symptoms despite identical genotypes." },
+            { term: "Extensor", definition: "A muscle used in the straightening of a limb." },
+            { term: "Facultative anaerobes", definition: "Prokaryotes that can exist with or without oxygen." },
+            { term: "Fertilization", definition: "Fusion of two gametes." },
+            { term: "Fertilization membrane", definition: "Structure created by the cortical reaction after fertilization of an ovum by a sperm cell; prevents fertilization of an ovum by multiple sperm cells." },
+            { term: "Fetus", definition: "A developing organism that has passed the early developmental stages. In humans, the term refers to an embryo from the ninth week after fertilization until birth." },
+            { term: "Fibrin", definition: "The insoluble protein that forms the bulk of a blood clot." },
+            { term: "Filial generation", definition: "Offspring in a genetic cross; may be supplemented with a subscript to show how many generations out from the parents." },
+            { term: "Filtration", definition: "In the nephron, the process by which blood plasma is forced (under high pressure) out of the glomerulus into Bowman's capsule." },
+            { term: "Fitness", definition: "Reproductive success of an individual, measured in increased number and survival of offspring." },
+            { term: "Flagellum", definition: "A microscopic, whip-like filament that functions in the locomotion of sperm cells and some unicellular organisms; composed of microtubules." },
+            { term: "Flexor", definition: "A muscle used in the bending of a limb." },
+            { term: "Follicle", definition: "The set of cells surrounding a developing or mature ovum. Secretes nutrients and estrogen and atrophies into the corpus luteum after ovulation." },
+            { term: "Foramen ovale", definition: "Shunt within the fetal heart between the right and left atria that allows the circulation to largely bypass the developing lungs." },
+            { term: "Gallbladder", definition: "Organ below the liver that stores bile; contracts in response to stimulation by cholecystokinin, resulting in release of bile into the biliary system and eventually into the duodenum." },
+            { term: "Gamete", definition: "Sperm or ovum; a cell that has half the number of chromosomes of a somatic cell (haploid) and can fuse with another gamete to form a zygote." },
+            { term: "Ganglion", definition: "A mass of neuron cell bodies outside the central nervous system." },
+            { term: "Gastrula", definition: "The embryonic stage characterized by the presence of ectoderm, mesoderm, and endoderm." },
+            { term: "Gene", definition: "The basic unit of heredity; a region on a chromosome that codes for a specific product." },
+            { term: "Gene pool", definition: "All of the alleles for every gene in every individual in a given population." },
+            { term: "Genetic drift", definition: "Variations in the gene pool caused by chance." },
+            { term: "Genetic map", definition: "A diagrammatic representation of a chromosome indicating distance between two genes on a chromosome as determined by recombination frequencies." },
+            { term: "Genome", definition: "An organism's complete set of chromosomes." },
+            { term: "Genotype", definition: "The genetic composition of an entire organism or in reference to a particular trait." },
+            { term: "Glomerulus", definition: "The network of capillaries encapsulated by Bowman's capsule. Acts as a filter for blood entering the nephron." },
+            { term: "Glottis", definition: "The opening to the trachea." },
+            { term: "Golgi apparatus", definition: "Organelle that plays a role in the packaging and secretion of proteins and other molecules produced intracellularly." },
+            { term: "Gonad", definition: "Ovary or testis; the reproductive organ in which gametes are produced." },
+            { term: "Gram staining", definition: "A process of staining bacterial cells such that cells containing large amounts of peptidoglycan within the cell wall are stained purple, while cells with less peptidoglycan within their cell walls appear pink-red after counterstaining." },
+            { term: "Granulocyte", definition: "Type of leukocyte with cytoplasmic granules that are visible under a microscope, such as neutrophils, basophils, or eosinophils." },
+            { term: "Grey matter", definition: "Any region in the central nervous system that consists largely of neuron cell bodies, dendrites, and synapses." },
+            { term: "Growth factors", definition: "Substances that cause induction during embryonic development and ensure the development of the correct structure in the right location." },
+            { term: "Haploid", definition: "Having only one of each type of chromosome per cell; symbolized by n." },
+            { term: "Hardy–Weinberg principle", definition: "States that gene ratios and allelic frequencies remain constant through the generations in a non-evolving population." },
+            { term: "Haversian canal", definition: "Central channel within the osteon (Haversian system) containing blood vessels, nerve fibers, and lymph vessels." },
+            { term: "Heavy chain", definition: "One of two types of chains, made of peptides, that create an antibody; each antibody consists of two heavy chains and two light chains." },
+            { term: "Helper T-cells", definition: "Type of T-cell that secretes lymphokines; the specific combination of lymphokines secreted will determine the nature of the immune response; activation of Th1 cells will result in a cytotoxic response, while a Th2 response will rely on B-cells." },
+            { term: "Hematocrit", definition: "Measurement of how much of a blood sample consists of red blood cells, expressed as a percentage." },
+            { term: "Hemoglobin", definition: "Iron-containing protein found in red blood cells that binds O2 and transports it throughout the body." },
+            { term: "Heterozygous", definition: "Having two different alleles for a particular trait." },
+           { term: "Hilum", definition: "Area of an organ where large vessels or other structures enter or exit; the renal hilum is where the renal artery enters the kidney, the renal vein leaves the kidney, and the ureter exits the kidney to transport urine to the bladder." },
+            { term: "Histamine", definition: "An inflammatory mediator that causes vasodilation and results in increased movement of fluid and cells out of the blood vessels and into the tissues." },
+            { term: "Homeostasis", definition: "Maintenance of a stable internal physiological environment in an organism." },
+            { term: "Homologous chromosomes", definition: "Chromosomes in a diploid cell that carry corresponding genes for the same traits at corresponding loci." },
+            { term: "Homozygous", definition: "Having two identical alleles for a given trait." },
+            { term: "Hormones", definition: "Chemical messengers secreted by cells of one part of the body and carried by the bloodstream to cells elsewhere in the body, where they regulate biochemical activity." },
+            { term: "Humoral immunity", definition: "Form of adaptive immunity that takes place within body fluids, driven by B-cells and antibodies." },
+            { term: "Hybrid", definition: "The resultant offspring of a cross (mating) either between two different gene types or between two different species." },
+            { term: "Hypodermis", definition: "Subcutaneous layer beneath the dermis in the skin." },
+            { term: "Hypothalamus", definition: "The region of the vertebrate forebrain that controls the autonomic nervous system and is the control center for hunger, thirst, body temperature, and other visceral functions; also secretes factors that stimulate or inhibit pituitary secretions." },
+            { term: "Ileum", definition: "The terminal portion of the small intestine." },
+            { term: "Impulse propagation", definition: "Movement of an action potential down an axon, resulting in neurotransmitter release at the synaptic bouton and transmission of the impulse to the target neuron or organ." },
+            { term: "Inborn error of metabolism", definition: "Genetic mutation that causes a change in an enzyme required for metabolism; early intervention is necessary to prevent the development of life-threatening conditions; some inborn errors of metabolism are ultimately incompatible with life." },
+            { term: "Incomplete dominance", definition: "A genetic effect in which the phenotype of a heterozygote is a mixture of the two parental phenotypes." },
+            { term: "Independent assortment", definition: "Unlinked genes within a primary germ cell separate randomly during gametogenesis." },
+            { term: "Indeterminate cleavage", definition: "Rapid mitotic divisions resulting in cells that are individually capable of becoming complete organisms." },
+            { term: "Inducer", definition: "A chemical substance passed from an organizing cell to a responsive cell, resulting in differentiation of the responsive cell." },
+            { term: "Induction", definition: "The initiation of cell differentiation in a developing embryo due to the influence of other cells." },
+            { term: "Innate immunity", definition: "Form of immunity that is nonspecific and does not require learning." },
+            { term: "Integument", definition: "The outer layer of the body (skin); provides function for thermoregulation and innate immunity." },
+            { term: "Intermediate filament", definition: "Collection of fibers that help to maintain the overall integrity of the cytoskeleton." },
+            { term: "Interneuron", definition: "A neuron that has its cell body and nerve terminals confined to one specific area; often involved in spinal reflexes." },
+            { term: "Interphase", definition: "The stage between successive nuclear divisions; it is divided into the G1, S, and G2 stages; cell growth and DNA replication occur during interphase." },
+            { term: "Intracellular digestion", definition: "Oxidation of fatty acids and glucose for energy within cells." },
+            { term: "Intrapleural space", definition: "Fluid-filled potential space between the parietal and visceral pleura that lubricates the two pleural surfaces and allows for a pressure differential between the intrapleural space and the lungs." },
+            { term: "Inversion", definition: "A chromosomal mutation in which a section of a chromosome breaks off, flips over, and then reattaches in its original spot." },
+            { term: "Isolation", definition: "Mechanism that prevents genetic exchange between individuals of different species or populations." },
+            { term: "Jejunum", definition: "The middle portion of the small intestine." },
+            { term: "Joint cavity", definition: "Space between two bones in a joint; enclosed and maintained by fibrous tissues." },
+            { term: "Juxtacrine", definition: "A form of cell–cell communication in which a cell releases a substance that binds to receptors on cells directly adjacent to the releasing cell." },
+            { term: "Keratin", definition: "Protein present in the outermost layer of the skin that is largely responsible for preventing the loss of fluids and salts as well as the entry of foreign substances into the body; also present as an intermediate filament within cells." },
+            { term: "Keratinocytes", definition: "Cells within the epidermis that produce keratin." },
+            { term: "Kidney", definition: "Vertebrate organ that regulates water and salt concentration in the blood and is responsible for urine formation." },
+            { term: "Kinetochore", definition: "A protein structure, located at the centromere, that provides a place for spindle fibers to attach to the chromosome." },
+            { term: "Lacteal", definition: "Small lymphatic vessel that runs in the center of the villi in the small intestine; site of lipid absorption into the lymphatic system." },
+            { term: "Lacunae", definition: "Small spaces within the bone matrix where osteocytes reside." },
+            { term: "Lamellae", definition: "Concentric circles of bony matrix within the Haversian systems of bone." },
+            { term: "Langerhans cells", definition: "Specialized macrophages that reside within the skin." },
+            { term: "Large intestine", definition: "Tube-like structure, shorter but wider than the small intestine, largely responsible for resorption of water and the formation of semisolid feces; consists of the cecum, ascending colon, transverse colon, descending colon, sigmoid colon, and rectum." },
+           { term: "Larynx", definition: "Pathway for air between the pharynx and the trachea. The epiglottis closes to prevent food from entering the larynx." },
+            { term: "Latent period", definition: "The short interval between the application of a stimulus to a muscle and the contraction of the muscle." },
+            { term: "Leakage", definition: "Flow of genes between closely related species." },
+            { term: "Leukocytes", definition: "White blood cells; can be subdivided into granulocytes and agranulocytes." },
+            { term: "Ligament", definition: "Connective tissue that joins two bones." },
+            { term: "Light chain", definition: "One of two types of chains, made of peptides, that create antibodies; each antibody consists of two heavy chains and two light chains." },
+            { term: "Linkage", definition: "Tendency for certain alleles to be inherited together due to proximity on the same chromosome." },
+            { term: "Lipase", definition: "Enzyme that specifically cleaves the bonds in lipids." },
+            { term: "Locus", definition: "In genetics, an area or region of a chromosome." },
+            { term: "Loop of Henle", definition: "The U-shaped section of a mammalian nephron." },
+            { term: "Lower esophageal sphincter", definition: "Ring-shaped muscular structure that separates the esophagus from the stomach; also known as the cardiac sphincter." },
+            { term: "Lumen", definition: "The space within a tube or a sac." },
+            { term: "Lymph", definition: "Clear fluid derived from blood plasma and transported through lymph vessels to the lymphatic ducts, which empty into the circulatory system." },
+            { term: "Lymph node", definition: "Small, bean-shaped structure that provides a location for antigen presentation and mounting of an attack by the adaptive immune system." },
+            { term: "Lymphocyte", definition: "A type of white blood cell involved in an organism's specific immune response." },
+            { term: "Lysogenic cycle", definition: "Bacteriophage infection involving the integration of viral DNA into the bacterial genome without disrupting or destroying the host. The virus may subsequently reemerge and enter a lytic cycle." },
+            { term: "Lysosome", definition: "A membrane-bound organelle that stores hydrolytic enzymes." },
+            { term: "Lytic cycle", definition: "Bacteriophage infection involving the destruction (lysis) of the host bacterium." },
+            { term: "Macrophage", definition: "A phagocytic white blood cell." },
+            { term: "Map unit", definition: "A unit used to denote a 1 percent recombination frequency between two genes when creating a genetic map; corresponds to one centimorgan." },
+            { term: "Mast cell", definition: "A granulocyte that releases histamine and causes inflammation." },
+            { term: "Mastication", definition: "Breaking up of large food particles using the teeth, tongue, and lips; chewing." },
+            { term: "Maternal", definition: "Of or relating to an individual who is pregnant. (As used in this text, it implies nothing about the gender identity of pregnant individuals.)" },
+            { term: "Mechanical digestion", definition: "Physical breakdown of large food particles into smaller food particles." },
+            { term: "Medulla", definition: "The internal section of an organ (such as the adrenal glands and the kidney); may generally refer to the medulla oblongata of the mammalian hindbrain." },
+            { term: "Medulla oblongata", definition: "The part of the brainstem closest to the spinal cord. It controls vital functions, such as breathing and heartbeat." },
+            { term: "Megakaryocyte", definition: "Precursor cell that gives off platelets." },
+            { term: "Meiosis", definition: "A process of cell division in which two successive nuclear divisions produce up to four haploid gametes from one diploid germ cell." },
+            { term: "Melanin", definition: "Skin pigment produced by melanocytes that protects the skin from UV radiation and provides color to skin." },
+            { term: "Melanocytes", definition: "Melanin-producing cells of the skin." },
+            { term: "Memory cell", definition: "Lymphocyte of B- or T-cell lineage that remains after an infection is gone in order to recognize the previous invader and rapidly induce a humoral immune response." },
+            { term: "Menstruation", definition: "The shedding of the uterine lining that occurs every four weeks in phenotypically female individuals who are not presently pregnant but are capable of becoming pregnant." },
+            { term: "Mesoderm", definition: "The middle embryonic germ layer; it gives rise to the muscular, skeletal, urogenital, and circulatory systems." },
+            { term: "Metabolism", definition: "The sum of all biochemical reactions that occur in an organism." },
+            { term: "Metaphase", definition: "The stage of mitosis or meiosis during which single chromosomes or tetrads line up on the central axis of the dividing cell and become attached to spindle fibers." },
+            { term: "Microfilaments", definition: "Small polymerized rods of actin that participate in muscle contraction, movement of material within the cellular membrane, and amoeboid movement." },
+            { term: "Microglia", definition: "Phagocytic white blood cells that reside in the central nervous system." },
+            { term: "Microtubule", definition: "A small, hollow tube composed of two types of protein subunits; serves numerous functions in the cell, such as comprising the internal structures of cilia and flagella and allowing vesicle movement in the cell." },
+            { term: "Missense mutation", definition: "Type of mutation that results in the substitution of one amino acid for another." },
+            { term: "Mitochondria", definition: "Membrane-bound cellular organelles in which the reactions of aerobic respiration and ATP synthesis occur." },
+           { term: "Mitosis", definition: "Cellular division that results in the formation of two daughter cells that are genetically identical to each other and to the parent cell." },
+            { term: "Mitral valve", definition: "The atrioventricular valve separating the left atrium from the left ventricle." },
+            { term: "Mixed nerve", definition: "Nerve carrying both afferent (sensory) and efferent (motor) fibers." },
+            { term: "Monocyte", definition: "A white blood cell that transforms into a macrophage or dendritic cell once it enters tissues." },
+            { term: "Monohybrid cross", definition: "A cross between two members of a species that seeks to study only one trait." },
+            { term: "Monosaccharide", definition: "A sugar consisting of one monomer (glucose, fructose, or galactose)." },
+            { term: "Morphogen", definition: "Molecule that causes nearby cells to proceed in a specific developmental pathway during embryonic development." },
+            { term: "Morula", definition: "The solid ball of cells that results from the early stages of cleavage in an embryo." },
+            { term: "Mucosa", definition: "The type of epithelial tissue that lines moist body cavities; a mucous membrane." },
+            { term: "Mucous cells", definition: "Type of epithelial cell that secretes mucus." },
+            { term: "Multipotent", definition: "Stem cell that is able to differentiate into various cells within a particular lineage." },
+            { term: "Mutagen", definition: "An agent, either chemical or physical, that can cause mutations." },
+            { term: "Mutation", definition: "A change in DNA sequence." },
+            { term: "Myelin", definition: "The white, lipid-containing material surrounding the axons of many neurons in the central and peripheral nervous systems." },
+            { term: "Myogenic activity", definition: "Ability of a muscle cell to contract without input from the nervous system; found in smooth and cardiac muscle types." },
+            { term: "Myoglobin", definition: "Heme-containing protein that binds molecular oxygen in muscle cells." },
+            { term: "Myosin", definition: "A protein found in muscle cells that functions in muscle contraction; myosin fibers are also called thick filaments." },
+            { term: "Natural selection", definition: "An ongoing evolutionary process resulting in changes in gene frequencies, leading to the differential development of phenotypes in a population." },
+            { term: "Negative sense", definition: "Describes the genome of an RNA virus that contains an RNA sequence that is complementary to the actual transcript for viral protein synthesis." },
+            { term: "Nephron", definition: "The functional unit of the vertebrate kidney." },
+            { term: "Nerve", definition: "A bundle of neurons." },
+            { term: "Nerve impulse", definition: "The self-propagating change in electrical potential across the axon membrane." },
+            { term: "Nerve terminal", definition: "End of the axon from which neurotransmitter molecules are released; also called a synaptic bouton." },
+            { term: "Neural crest cells", definition: "Cells that originate at the tip of the neural fold and then migrate outward to form the peripheral nervous system, melanocytes, C-cells of the thyroid, and others." },
+            { term: "Neural fold", definition: "Group of ectodermal cells that slide together to create a fold, which later becomes the neural tube." },
+            { term: "Neural tube", definition: "Embryonic hollow tube that subsequently gives rise to the central nervous system." },
+            { term: "Neuroglia", definition: "Support cells for neurons; responsible for functions such as holding neurons in place, supplying neurons with oxygen and nutrients, insulating neurons from other neurons, destroying pathogens, and removing dead neurons." },
+            { term: "Neuron", definition: "A cell that conducts electrical impulses; the functional unit of the nervous system." },
+            { term: "Neurotransmitter", definition: "A chemical agent released into the synaptic cleft by the synaptic bouton of a neuron; binds to receptor sites on postsynaptic neurons or effector membranes to alter activity." },
+            { term: "Neutrophil", definition: "Type of granulocytic leukocyte that largely participates in the nonspecific immune response against bacteria." },
+            { term: "Niche", definition: "The specific way of life occupied by a given organism within the environment, including its interactions with other organisms and with the physical environment." },
+            { term: "Nodes of Ranvier", definition: "Points on a myelinated axon that are not covered by myelin." },
+            { term: "Nondisjunction", definition: "Failure of homologous chromosomes to separate during meiosis." },
+            { term: "Nonsense mutation", definition: "A change in nucleotide sequence of DNA that results in a premature stop codon in the mRNA sequence." },
+            { term: "Norepinephrine", definition: "A hormone synthesized by the adrenal medulla; it stimulates the fight-or-flight response; also, a neurotransmitter in the sympathetic nervous system." },
+            { term: "Notochord", definition: "A supportive rod running just ventral to the neural tube in vertebrate embryos that induces neurulation." },
+            { term: "Nuclear membrane", definition: "Double membrane enveloping the nucleus, interrupted periodically by pores; found in eukaryotic cells only; also known as the nuclear envelope." },
+            { term: "Nuclear pore", definition: "Small hole in the nuclear membrane that allows for two-way exchange of material between the cytoplasm and nucleus." },
+            { term: "Nucleoid region", definition: "Location in prokaryotic cells where the chromosome is found." },
+            { term: "Nucleolus", definition: "Dense body visible in a nondividing nucleus; site of ribosomal RNA synthesis." },
+            { term: "Nucleus", definition: "The eukaryotic membrane-bound organelle that contains the cell's chromosomes; in neuroscience, a collection of cell bodies in the central nervous system." },
+            { term: "Oligodendrocyte", definition: "Myelin-producing cells in the central nervous system." },
+            { term: "Oocyte", definition: "An undifferentiated cell that undergoes meiosis to produce an egg cell (ovum)." },
+            { term: "Oogenesis", definition: "Gametogenesis in the ovary leading to the formation of mature ova." },
+            { term: "Osmotic pressure", definition: "A \"sucking\" pressure generated by the presence of solutes drawing in water." },
+            { term: "Osteoblast", definition: "Bone cell responsible for the generation of new bone due to bone remodeling or storage of minerals within the bone matrix." },
+            { term: "Osteoclast", definition: "Bone cell responsible for the resorption of bone due to bone remodeling or mobilization of minerals from the bone matrix." },
+            { term: "Osteocytes", definition: "Mature bone cells housed within the bone matrix." },
+            { term: "Ovary", definition: "The female egg-producing gonad." },
+            { term: "Oviduct", definition: "The tube leading from the ovary to the uterus; generally, the site of fertilization; also called the fallopian tube." },
+            { term: "Ovulation", definition: "The release of the mature ovum from the ovarian follicle." },
+            { term: "Ovum", definition: "The female gamete; egg cell." },
+            { term: "Oxygen debt", definition: "The amount of oxygen needed to reconvert lactic acid to pyruvate following strenuous exercise; the difference between the amount of oxygen needed by the tissue and the amount of oxygen available." },
+            { term: "Pancreas", definition: "A gland that secretes digestive enzymes into the duodenum via a duct and synthesizes and secretes the hormones insulin, glucagon, and somatostatin; located between the stomach and the duodenum." },
+            { term: "Papillary layer", definition: "Upper layer of the dermis, right below the epidermis, that consists of loose connective tissue." },
+            { term: "Paracrine", definition: "A form of cell–cell communication in which a cell releases a substance into the extracellular fluid and the substance binds to receptors on nearby cells to cause a change in cellular activities." },
+            { term: "Parasympathetic nervous system", definition: "The subdivision of the autonomic nervous system involved in rest and homeostasis; it is generally antagonistic to the sympathetic nervous system." },
+            { term: "Parathyroid glands", definition: "Two pairs of glands located on the thyroid that secrete hormones that regulate calcium and phosphorous metabolism." },
+            { term: "Parietal cells", definition: "Cells within the stomach that are responsible for the secretion of acid into the lumen of the stomach." },
+            { term: "Passive immunity", definition: "Immunity conferred by the transfer or injection of previously formed antibodies." },
+            { term: "Pathogen", definition: "An infectious disease-causing agent; includes bacteria, viruses, fungi, parasites, and prions." },
+            { term: "Pattern recognition receptor", definition: "Type of receptor on macrophages and dendritic cells that is able to recognize the nature of the invader (bacteria, virus, or fungi) and release the appropriate cytokines to attract the right immune cells to the area." },
+            { term: "Penetrance", definition: "Percent of individuals with a particular genotype that actually express the associated phenotype." },
+            { term: "Peptidase", definition: "Enzyme that cleaves peptide bonds." },
+            { term: "Periosteum", definition: "Fibrous sheath surrounding long bones." },
+            { term: "Peripheral nervous system", definition: "Includes all neurons outside the central nervous system, including sensory and motor neurons; it is subdivided into the somatic and autonomic nervous systems." },
+            { term: "Peristalsis", definition: "Rhythmic waves of muscular contraction that move a substance through a tube (most commonly, food through the digestive tract)." },
+            { term: "Peroxisome", definition: "Organelle that contains hydrogen peroxide and participates in the breakdown of very long chain fatty acids." },
+            { term: "Pharynx", definition: "Pathway for food from the mouth to the esophagus, and for air from the nose and mouth to the larynx." },
+            { term: "Phenotype", definition: "The physical manifestation of an organism's genotype." },
+            { term: "Pineal gland", definition: "Structure within the brain that secretes melatonin, a hormone that aids in the regulation of sleep–wake cycles." },
+            { term: "Pituitary", definition: "The bilobed endocrine gland that lies just below the hypothalamus; because many of its hormones regulate other endocrine glands, it is known as the \"master gland.\"" },
+            { term: "Placenta", definition: "The structure formed by the wall of the uterus and the chorion of the embryo; contains a network of capillaries through which exchange between maternal and fetal circulation occurs." },
+            { term: "Plasma", definition: "The fluid component of blood containing dissolved solutes, minus the cells." },
+            { term: "Plasma cells", definition: "Derived from B-lymphocytes; have the ability to produce and secrete antibodies." },
+            { term: "Plasmid", definition: "Small circular ring of extrachromosomal DNA found in bacteria." },
+            { term: "Platelets", definition: "Small, enucleated, disc-shaped shards of blood cells that play an important role in clotting." },
+            { term: "Pleura", definition: "Connective tissue that surrounds each lung and aids in providing attachment of the lungs to the chest wall; the parietal pleura lies along the chest wall, while the visceral pleura is adherent to the lungs." },
+            { term: "Pluripotent", definition: "Stem cell that has undergone gastrulation and is able to differentiate into any cell type within the same primary germ layer." },
+            { term: "Polar body", definition: "A small, nonfunctional haploid cell created during oogenesis." },
+            { term: "Population", definition: "A group of organisms of the same species living together in a given location." },
+            { term: "Portal system", definition: "A circuit of blood in which there are two capillary beds in tandem connected by an artery or vein; examples include the hypophyseal, hepatic, and renal portal systems." },
+            { term: "Positive sense", definition: "Describes the genome of an RNA virus containing RNA that serves directly as the transcript for viral protein production." },
+            { term: "Potency", definition: "Term used to describe the ability or inability of a stem cell to differentiate into different cell types." },
+            { term: "Primary response", definition: "Humoral immune response against an invader during the first encounter; takes seven to ten days to become effective." },
+            { term: "Prion", definition: "Infectious protein that causes disease by causing changes in the three-dimensional structure of other proteins from α-helices to β-pleated sheets." },
+            { term: "Prokaryote", definition: "Cell lacking a nuclear membrane and membrane-bound organelles, such as a bacterium." },
+            { term: "Prophase", definition: "The stage of mitosis or meiosis during which the DNA strands condense to form visible chromosomes; during prophase I of meiosis, homologous chromosomes align." },
+            { term: "Prostate", definition: "A gland in phenotypically male mammals that secretes alkaline seminal fluid." },
+            { term: "Pulmonary valve", definition: "One of the semilunar valves, separating the right ventricle from the pulmonary arteries." },
+            { term: "Purkinje fibers", definition: "The terminal fibers of the heart's conduction system; located in the walls of ventricles." },
+            { term: "Pyloric sphincter", definition: "The valve that regulates the flow of chyme from the stomach into the small intestine." },
+            { term: "Recessive", definition: "An allele that requires two copies to be expressed." },
+            { term: "Recombination", definition: "New gene combinations achieved by sexual reproduction or crossing over in eukaryotes and by transformation, transduction, or conjugation in prokaryotes." },
+            { term: "Recombination frequency", definition: "Measurement of how often genes recombine in different combinations; genes that are closer together have lower recombination frequencies." },
+            { term: "Rectum", definition: "Terminal portion of the large intestine, where feces is stored until defecation." },
+            { term: "Reflex", definition: "An involuntary nervous pathway consisting of sensory neurons, interneurons, motor neurons, and effectors; it occurs in response to a specific stimulus." },
+            { term: "Refractory period", definition: "The period of time following an action potential during which the neuron is incapable of depolarization." },
+            { term: "Releasing hormones", definition: "Proteins synthesized and secreted by the hypothalamus that stimulate the pituitary to synthesize and release its hormones. Also known as tropic hormones." },
+            { term: "Renal pelvis", definition: "The widest part of the ureter, located within the kidney; location into which all collecting ducts eventually empty." },
+            { term: "Renin–angiotensin–aldosterone system", definition: "Hormonal pathway that, among other functions, raises blood pressure." },
+            { term: "Repolarization", definition: "Restoration of the resting membrane potential in neurons from being depolarized by both active and passive processes." },
+            { term: "Respiration", definition: "In biochemistry, the series of oxygen-requiring biochemical reactions that lead to ATP synthesis; in physiology, the inhalation and exhalation of gases and their exchange in the lungs." },
+            { term: "Responder", definition: "Embryonic cell that is undergoing induction." },
+            { term: "Resting potential", definition: "The electrical potential of a cell at rest, approximately -70 mV in most excitable cells." },
+            { term: "Restriction point", definition: "A point in the cell cycle that prevents the cell from entering the next portion of the cell cycle unless certain criteria are met." },
+            { term: "Reticular layer", definition: "Lower layer of the dermis, consisting of dense connective tissue." },
+            { term: "Retrovirus", definition: "An RNA virus that contains the enzyme reverse transcriptase, which transcribes RNA into DNA." },
+            { term: "Rh factor", definition: "An antigen on a red blood cell, the presence or absence of which is indicated by + or -, respectively, in blood type notation; may also be called the D allele." },
+            { term: "Ribosome", definition: "Organelle composed of RNA and protein; it translates mRNA during protein synthesis." },
+            { term: "Rough endoplasmic reticulum", definition: "Portion of the endoplasmic reticulum that appears rough microscopically due to the presence of ribosomes attached to the outer surface; site of protein synthesis for proteins destined to be membrane-bound or secreted." },
+            { term: "Saltatory conduction", definition: "Process by which an electrical signal jumps across the nodes of Ranvier to travel down the axon." },
+            { term: "Sarcolemma", definition: "Muscle cell membrane capable of propagating action potentials." },
+            { term: "Sarcomere", definition: "The functional contractile unit of striated muscle." },
+            { term: "Sarcoplasmic reticulum", definition: "The endoplasmic reticulum of a muscle cell; it envelops myofibrils." },
+            { term: "Schwann cell", definition: "Myelin-producing cell in the peripheral nervous system." },
+            { term: "Second messenger", definition: "Substance that is mobilized within a cell after the binding of a hormone to its receptor." },
+            { term: "Secondary response", definition: "Humoral immune response against a previously encountered invader; results in activation of memory cells and an immediate response." },
+            { term: "Semen", definition: "Fluid released during ejaculation consisting of sperm cells suspended in seminal fluid." },
+            { term: "Seminal vesicle", definition: "A gland found in phenotypically male mammals that produces seminal fluid." },
+            { term: "Sex factor", definition: "Plasmid containing genetic material for the formation of a sex pili, required for conjugation." },
+            { term: "Sex pilus", definition: "Appendage extending from the donor male (+) bacterial cell to the recipient female (-), allowing for the formation of the cytoplasmic bridge and transfer of genetic material." },
+            { term: "Sex-linked gene", definition: "A gene located only on a sex chromosome (almost always the X chromosome); such genes exhibit different inheritance patterns in genotypical males and genotypical females." },
+            { term: "Sexual reproduction", definition: "Any reproductive process that involves the fusion of gametes, resulting in the passage of combined genetic information to offspring." },
+            { term: "Silent mutation", definition: "Change of one nucleotide for another that does not result in a change in the protein due to the degenerative nature of the genetic code (multiple codons code for the same amino acid)." },
+            { term: "Small intestine", definition: "Long tube-like structure; longer, but narrower than the large intestine, largely responsible for chemical digestion of foodstuffs and absorption of nutrients; consists of the duodenum, jejunum, and ileum." },
+            { term: "Smooth endoplasmic reticulum", definition: "Portion of the endoplasmic reticulum that lacks ribosomes on its surface; location of lipid synthesis and detoxification of drugs and poisons." },
+            { term: "Somatic cells", definition: "All cells in the body except germ cells and gametes." },
+            { term: "Somatic nervous system", definition: "Subdivision of the peripheral nervous system that governs all voluntary actions." },
+            { term: "Species", definition: "The largest group of organisms capable of mating to produce viable, fertile offspring." },
+            { term: "Specific immune response", definition: "An organism's targeted fight against a specific pathogen using both antibodies and cytotoxic immunity." },
+            { term: "Sperm", definition: "The mature male gamete or sex cell." },
+            { term: "Spermatids", definition: "Immature haploid sperm cells." },
+            { term: "Spermatogenesis", definition: "Gametogenesis in the testes leading to sperm formation." },
+            { term: "Spermatogonia", definition: "Diploid stem cells in males that eventually give rise to sperm cells." },
+            { term: "Spermatozoa", definition: "Mature haploid sperm cells." },
+            { term: "Sphincter", definition: "A ring-shaped muscle that closes and opens a tube (such as the pyloric sphincter)." },
+            { term: "Sphygmomanometer", definition: "Device used to measure blood pressure, consisting of an inflatable cuff and a gauge that measures pressure." },
+            { term: "Spindle", definition: "A structure within dividing cells composed of microtubules; it is involved in the separation of chromosomes during mitosis and meiosis." },
+            { term: "Spirilli", definition: "Spiral-shaped bacteria." },
+            { term: "Spleen", definition: "Highly vascular organ in the left upper quadrant of the abdomen; serves as a location for disposal of aged red blood cells and the presentation of antigens to B-cells." },
+            { term: "Stabilizing selection", definition: "Selective pressure resulting in the elimination of extremes." },
+            { term: "Starling forces", definition: "A sum of the forces generated by hydrostatic and osmotic pressures; results in a greater attraction of fluid to one side of a membrane." },
+            { term: "Stroke volume", definition: "Amount of blood ejected from a ventricle with each heartbeat." },
+            { term: "Summation", definition: "Process that occurs when the postsynaptic neuron or target organ requires stimulation from multiple presynaptic neurons in order to respond to the stimulus; may be spatial or temporal." },
+            { term: "Suppressor T-cells", definition: "Also known as regulatory T-cells (Treg), these T-cells limit the immune response to prevent detrimental immune reactions, such as autoimmunity." },
+            { term: "Surfactant", definition: "A detergent that lowers surface tension and prevents collapse of the alveoli." },
+            { term: "Symbiote", definition: "Organism living closely with a host and engaging in a mutually beneficial relationship." },
+            { term: "Sympathetic nervous system", definition: "The subdivision of the autonomic nervous system that produces the \"fight-or-flight\" response." },
+            { term: "Synapse", definition: "The junction between two neurons into which neurotransmitters are released." },
+            { term: "Synapsis", definition: "The pairing of homologous chromosomes during prophase I of meiosis." },
+            { term: "Synovial capsule", definition: "Fluid-filled space between bones in a joint; enclosed by fibrous tissue; synovial fluid lubricates the joint." },
+            { term: "Systole", definition: "The period of the cardiac cycle during which the ventricles contract and pump blood into the aorta and pulmonary arteries." },
+            { term: "T-cells", definition: "Type of leukocyte that matures in the thymus and participates in adaptive immunity." },
+            { term: "Telophase", definition: "The final stage of mitosis or meiosis during which the chromosomes uncoil, nuclear membranes reform, and cytokinesis occurs." },
+            { term: "Tendon", definition: "A fibrous connective tissue that connects a bone to a muscle." },
+            { term: "Test cross", definition: "A cross between an organism showing a dominant trait and an organism showing a recessive trait to determine whether the former organism is homozygous or heterozygous for that trait." },
+            { term: "Testis", definition: "The sperm-producing organ; also secretes testosterone." },
+            { term: "Tetanus", definition: "Sustained muscle contraction that results from continuous stimulation." },
+            { term: "Tetrad", definition: "A pair of homologous chromosomes synapsing during prophase I of meiosis. Each chromosome consists of two sister chromatids; thus, each tetrad consists of four chromatids." },
+            { term: "Thermoregulation", definition: "Process by which an organism regulates its internal temperature by using the respiratory, integumentary, and circulatory systems." },
+            { term: "Thoracic duct", definition: "The main lymphatic vessel that empties lymph into the bloodstream." },
+            { term: "Threshold", definition: "The lowest magnitude of stimulus strength that will induce a response." },
+            { term: "Thrombin", definition: "An enzyme that participates in blood clotting; it converts fibrinogen into fibrin." },
+            { term: "Thymus", definition: "A ductless gland in the upper chest region of vertebrates; it functions in the development of the immune system." },
+            { term: "Thyroid", definition: "A vertebrate endocrine gland located in the neck that synthesizes triiodothyronine, thyroxine, and calcitonin." },
+            { term: "Tissue", definition: "A mass of similar cells and support structures organized into a functional unit." },
+            { term: "Tonus", definition: "A continuous state of low-level muscle contraction." },
+            { term: "Totipotent", definition: "Type of stem-cell potency describing cells that are able to differentiate into all cell types within an organism." },
+            { term: "Trachea", definition: "The tube that connects the pharynx to the bronchi." },
+            { term: "Transduction", definition: "The transposition of genetic material from one organism to another by a virus." },
+            { term: "Transformation", definition: "Uptake and incorporation of DNA from the environment by a recipient bacterial cell." },
+            { term: "Transposon", definition: "Genetic element capable of inserting and removing itself from the genome." },
+            { term: "Tricuspid valve", definition: "One of the atrioventricular valves, separating the right atrium from the right ventricle." },
+            { term: "Trophoblast", definition: "Embryonic cells that line the blastocoel and give rise to the chorion and the placenta." },
+            { term: "Tropic hormone", definition: "Hormone that is secreted and travels to a target cell or organ, where it triggers release of another hormone, which causes changes in the physiological activity of target cells." },
+            { term: "Tubulin", definition: "Protein constituent of microtubules." },
+            { term: "Universal donor", definition: "A person (O- blood) whose blood is able to be given to all types without inducing an immune response." },
+            { term: "Universal recipient", definition: "A person (AB+ blood) who is able to receive all blood types without undergoing an immune response." },
+            { term: "Urea", definition: "A nitrogenous waste product produced in the liver from ammonia." },
+            { term: "Ureter", definition: "The tube that carries urine from the kidneys to the bladder." },
+            { term: "Urethra", definition: "The tube that carries urine from the bladder to the exterior." },
+            { term: "Urine", definition: "Liquid waste resulting from the filtration, reabsorption, and secretion of filtrate in the nephron." },
+            { term: "Uterus", definition: "Organ in the mammalian female reproductive system that is the site of embryonic development." },
+            { term: "Vaccine", definition: "A solution of fractionated, dead, or attenuated live pathogenic material that is introduced into an individual for the purpose of stimulating a primary immune response or \"boosting\" a previously produced anamnestic state." },
+            { term: "Vagina", definition: "Passageway through which childbirth occurs; location into which sperm is deposited during sexual intercourse." },
+            { term: "Vagus nerve", definition: "The tenth cranial nerve; it innervates the palate, pharynx, larynx, heart, lungs, and abdominal viscera; responsible for maintaining homeostatic activity through the parasympathetic response." },
+            { term: "Vas deferens", definition: "The tube carrying sperm from the testis to the urethra in phenotypically male mammals." },
+            { term: "Vasa recta", definition: "Second capillary bed within the kidney that removes substances from the interstitium of the kidney to be returned to the systemic circulation." },
+            { term: "Vein", definition: "Thin-walled blood vessel that carries blood toward the heart." },
+            { term: "Venae cavae", definition: "Two large veins (superior and inferior) that return deoxygenated blood from the periphery to the right atrium of the heart." },
+            { term: "Ventilation center", definition: "Groups of neurons in the medulla oblongata that regulate respiration." },
+            { term: "Ventricles", definition: "The chambers of the heart that pump blood into pulmonary and systemic circulation." },
+            { term: "Venule", definition: "Small venous structure that links the capillaries to the veins." },
+            { term: "Vestigial", definition: "Referring to an organ or limb that has no apparent function now, but was functional at some time in the organism's evolutionary past." },
+            { term: "Villus", definition: "A small projection from the wall of the small intestine that increases the surface area for digestion and absorption." },
+            { term: "Viroid", definition: "A small plant pathogen consisting of a very short, circular, single strand of RNA." },
+            { term: "Virus", definition: "A tiny, organism-like particle composed of protein-encased nucleic acid; viruses are obligate parasites." },
+            { term: "Vitamin", definition: "An organic nutrient that an organism cannot produce itself and that is required by the organism in small amounts to aid in proper metabolic functioning; vitamins often function as cofactors for enzymes." },
+            { term: "White matter", definition: "The portion of the central nervous system consisting primarily of myelinated axons." },
+            { term: "Zona pellucida", definition: "One of two layers of cells surrounding an oocyte." },
+            { term: "Zygote", definition: "The diploid (2n) cell that results from the fusion of two haploid (n) gametes." },
+            { term: "Zymogen", definition: "An inactive enzyme precursor that is converted into an active enzyme." }
        
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-
-        var dayName = days[today.getDay()];
-        var monthName = monthNames[today.getMonth()];
-        var date = today.getDate();
-        var year = today.getFullYear();
-        document.getElementById('date').innerHTML =dayName+", "+monthName+" "+date+" "+year;
-
-    }
+       ];
 
 
-    function dispalyClock(today) {
-
-        var hour = padZeros(twelveHour(today.getHours()));
-        var minutes = padZeros(today.getMinutes());
-        var seconds = padZeros(today.getSeconds());
-       
-        if(today.getHours() >=12){
-            seconds+=" pm"
-        }
-        else{
-            seconds+=" am"
-        }
-       
-        document.getElementById('hour').innerHTML = hour;
-        document.getElementById('min').innerHTML = minutes;
-        document.getElementById('sec').innerHTML = seconds;
-    }
-
-    function twelveHour(hour) {
-        if (hour > 12) {
-            return hour -= 12
-        } else if (hour === 0) {
-            return hour = 12;
-        } else {
-            return hour
-        }
-    }
-    function padZeros(num) {
-        if (num < 10) {
-            num = '0' + num
+       // Main data structures
+        const state = {
+            currentMode: 'flashcard',
+            currentSystem: 'all',
+            currentIndex: 0,
+            isFlipped: false,
+            searchTerm: '',
+            customSets: {},
+            progress: {
+                mastered: new Set(),
+                learning: new Set(),
+                difficult: new Set()
+            },
+            spacedRepetition: {
+                queue: [],
+                nextReview: {},
+                levels: [0, 1, 3, 7, 14, 30]
+            },
+            quizScore: {
+                correct: 0,
+                total: 0
+            }
         };
-        return num;
+
+        // System categories with complete term categorization
+       const systemCategories = {
+    nervous: [
+        // Basic neural components
+        "Action potential", "Axon", "Axon hillock", "Dendrite", "Neuron", "Neurotransmitter",
+        "Synapse", "Nerve", "Nerve impulse", "Nerve terminal", "Neuroglia", "Myelin",
+        "Oligodendrocyte", "Schwann cell", "Saltatory conduction",
+        
+        // Neural systems
+        "Central nervous system", "Peripheral nervous system", "Autonomic nervous system",
+        "Sympathetic nervous system", "Parasympathetic nervous system", "Enteric nervous system",
+        "Mixed nerve", "Afferent (sensory) neuron", "Efferent (motor) neuron",
+        
+        // Brain structures
+        "Cerebellum", "Cerebral cortex", "Medulla oblongata", "Grey matter", "White matter",
+        "Neural crest cells", "Neural fold", "Neural tube", "Ventilation center"
+    ],
+
+    circulatory: [
+        // Blood vessels
+        "Artery", "Vein", "Capillary", "Arterioles", "Venule", "Venae cavae",
+        
+        // Heart components
+        "Cardiac output", "Stroke volume", "Systole", "Diastole",
+        "Aortic valve", "Mitral valve", "Tricuspid valve", "Pulmonary valve",
+        "Bundle of His", "Purkinje fibers",
+        
+        // Blood components
+        "Blood", "Plasma", "Hemoglobin", "Erythrocyte", "Platelets", "Leukocytes",
+        "Hematocrit", "Albumin", "Fibrin", "Thrombin"
+    ],
+
+    digestive: [
+        // Digestive tract
+        "Esophagus", "Stomach", "Small intestine", "Large intestine", "Duodenum", 
+        "Jejunum", "Ileum", "Cecum", "Rectum",
+        
+        // Digestive organs
+        "Liver", "Pancreas", "Gallbladder",
+        
+        // Digestive processes
+        "Absorption", "Digestion", "Chemical digestion", "Mechanical digestion",
+        "Bile", "Enzyme", "Villus", "Brush-border enzymes",
+        
+        // Structures and substances
+        "Bolus", "Chyme", "Pyloric sphincter", "Lower esophageal sphincter",
+        "Chief cells", "Parietal cells"
+    ],
+
+    respiratory: [
+        "Lung", "Bronchi", "Bronchioles", "Alveolus", "Trachea", "Diaphragm",
+        "Respiration", "Larynx", "Pharynx", "Epiglottis", "Glottis",
+        "Surfactant", "Oxygen debt", "Bohr effect"
+    ],
+
+    immune: [
+        // Immune cells
+        "Lymphocyte", "T-cells", "B-cells", "Helper T-cells", "Suppressor T-cells",
+        "Cytotoxic T-cell", "Plasma cells", "Macrophage", "Neutrophil", "Basophil",
+        "Eosinophil", "Agranulocyte", "Granulocyte", "Monocyte", "Langerhans cells",
+        
+        // Immune components
+        "Antibody", "Antigen", "Antigen-binding region", "Constant region",
+        "Heavy chain", "Light chain",
+        
+        // Immune processes
+        "Active immunity", "Passive immunity", "Cell-mediated immunity",
+        "Humoral immunity", "Inflammation", "Primary response", "Secondary response",
+        
+        // Immune structures
+        "Thymus", "Spleen", "Lymph", "Lymph node"
+    ],
+
+    reproductive: [
+        // Male reproduction
+        "Testis", "Sperm", "Spermatogenesis", "Spermatogonia", "Spermatids",
+        "Spermatozoa", "Vas deferens", "Epididymis", "Prostate", "Seminal vesicle",
+        
+        // Female reproduction
+        "Ovary", "Ovum", "Oogenesis", "Oocyte", "Uterus", "Cervix", "Vagina",
+        "Oviduct", "Ovulation", "Corpus luteum", "Follicle",
+        
+        // Developmental
+        "Fertilization", "Zygote", "Embryo", "Fetus", "Corona radiata",
+        "Zona pellucida", "Placenta", "Blastocyst", "Trophoblast"
+    ],
+
+    skeletal: [
+        // Bone structure
+        "Bone matrix", "Bone marrow", "Diaphysis", "Epiphysis", "Epiphyseal plate",
+        "Periosteum", "Haversian canal", "Canaliculi", "Lacunae",
+        
+        // Bone cells
+        "Osteoblast", "Osteoclast", "Osteocytes",
+        
+        // Supporting structures
+        "Cartilage", "Ligament", "Tendon", "Articular cartilage",
+        "Chondrin", "Chondrocyte",
+        
+        // Classifications
+        "Appendicular skeleton", "Axial skeleton"
+    ],
+
+    cellular: [
+        // Cell structures
+        "Cell membrane", "Nucleus", "Nuclear membrane", "Nuclear pore", "Nucleolus",
+        "Mitochondria", "Endoplasmic reticulum", "Rough endoplasmic reticulum",
+        "Smooth endoplasmic reticulum", "Golgi apparatus", "Ribosome", "Lysosome",
+        "Cytoplasm", "Peroxisome",
+        
+        // Cell division
+        "Mitosis", "Meiosis", "Prophase", "Metaphase", "Anaphase", "Telophase",
+        "Cytokinesis", "Chromosome", "Chromatid", "Centromere", "Centriole",
+        "Centrosomes", "Spindle", "Asters",
+        
+        // Cell components
+        "Microtubule", "Microfilament", "Intermediate filament",
+        "Actin", "Myosin", "Tubulin"
+    ],
+
+    genetics: [
+        // Basic genetics
+        "Gene", "Allele", "Chromosome", "DNA", "RNA", "Mutation",
+        "Phenotype", "Genotype", "Dominant", "Recessive",
+        "Homozygous", "Heterozygous", "Codominance", "Incomplete dominance",
+        
+        // Genetic processes
+        "Crossing over", "Independent assortment", "Recombination",
+        "Transformation", "Transduction", "Conjugation",
+        
+        // Types of mutations
+        "Deletion", "Inversion", "Silent mutation", "Missense mutation",
+        "Nonsense mutation"
+    ],
+
+    endocrine: [
+        "Hormone", "Direct hormone", "Tropic hormone",
+        "Thyroid", "Parathyroid glands", "Pituitary",
+        "Pineal gland", "Pancreas", "Androgen",
+        "Epinephrine", "Norepinephrine", "Corticosteroids"
+    ],
+
+embryology: [
+        // Early development stages
+        "Zygote", "Cleavage", "Morula", "Blastula", "Blastocyst", "Blastocoel",
+        "Blastopore", "Blastulation", "Gastrula",
+        
+        // Germ layers and their development
+        "Ectoderm", "Mesoderm", "Endoderm",
+        "Neural crest cells", "Neural fold", "Neural tube",
+        "Notochord", "Archenteron",
+        
+        // Embryonic membranes and structures
+        "Amnion", "Allantois", "Chorion", "Placenta",
+        "Trophoblast", "Corona radiata", "Zona pellucida",
+        
+        // Cell fate and differentiation
+        "Determination", "Differentiation", "Competent",
+        "Induction", "Inducer", "Responder",
+        "Morphogen", "Growth factors",
+        
+        // Types of development
+        "Determinate cleavage", "Indeterminate cleavage",
+        "Adaptive radiation", "Convergent evolution",
+        
+        // Embryonic/Fetal development
+        "Embryo", "Fetus",
+        "Ductus arteriosus", "Ductus venosus", "Foramen ovale",
+        
+        // Reproductive structures development
+        "Follicle", "Corpus luteum",
+        "Oogenesis", "Spermatogenesis",
+        
+        // Developmental potency
+        "Totipotent", "Pluripotent", "Multipotent",
+        
+        // Development control
+        "Cell fate", "Pattern formation",
+        "Organizer", "Axis formation",
+        
+        // Cellular processes in development
+        "Apoptosis", "Migration",
+        "Cell adhesion", "Cell signaling",
+        
+        // Reproductive events
+        "Fertilization", "Fertilization membrane",
+        "Cortical reaction", "Acrosome",
+        
+        // Developmental timing
+        "Embryonic period", "Fetal period",
+        "Trimester", "Gestation"
+	],
+
+};
+
+        // DOM Elements
+        const mainContent = document.getElementById('mainContent');
+        const searchInput = document.getElementById('searchInput');
+        const systemList = document.getElementById('systemList');
+        const modeButtons = document.querySelectorAll('.mode-selector .btn');
+        const progressFill = document.querySelector('.progress-fill');
+        const progressText = document.getElementById('progressText');
+        const createSetBtn = document.getElementById('createSetBtn');
+
+        // Core Functions
+
+        function init() {
+            loadProgress();
+            loadCustomSets();
+            setupEventListeners();
+            initializeSpacedRepetition();
+            updateDisplay();
+        }
+
+        function setupEventListeners() {
+            // Mode selection
+            modeButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const mode = e.target.id.replace('Mode', '');
+                    changeMode(mode);
+                });
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', (e) => {
+                state.searchTerm = e.target.value.toLowerCase();
+                updateDisplay();
+            });
+
+            // System selection
+            systemList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('system-item')) {
+                    const system = e.target.dataset.system;
+                    changeSystem(system);
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                switch(e.key) {
+                    case ' ':
+                    case 'Enter':
+                        e.preventDefault();
+                        flipCard();
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        nextCard();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        previousCard();
+                        break;
+                    case 'm':
+                        e.preventDefault();
+                        markCard('mastered');
+                        break;
+                    case 'd':
+                        e.preventDefault();
+                        markCard('difficult');
+                        break;
+                }
+            });
+
+            // Custom set creation
+            createSetBtn.addEventListener('click', createCustomSet);
+        }
+
+        function changeMode(mode) {
+            state.currentMode = mode;
+            state.currentIndex = 0;
+            state.isFlipped = false;
+            
+            modeButtons.forEach(button => {
+                button.classList.toggle('active', button.id === `${mode}Mode`);
+            });
+            
+            updateDisplay();
+        }
+
+        function changeSystem(system) {
+            state.currentSystem = system;
+            state.currentIndex = 0;
+            state.isFlipped = false;
+            
+            document.querySelectorAll('.system-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.system === system);
+            });
+            
+            updateDisplay();
+        }
+
+        // Card Filtering and Display
+
+        function getFilteredCards() {
+            let filtered = [...flashcards];
+    
+    // Apply system filter
+    if (state.currentSystem !== 'all') {
+        filtered = filtered.filter(card => 
+            systemCategories[state.currentSystem]?.includes(card.term)
+        );
     }
 
-    function dispalyWidget() {
-        var today = new Date();
-        dispalyGreetings(today);
-        dispalyDate(today);
-        dispalyClock(today);
-        setTimeout(dispalyWidget, 500);
+    // Apply search filter
+    if (state.searchTerm) {
+        filtered = filtered.filter(card =>
+            card.term.toLowerCase().includes(state.searchTerm) ||
+            card.definition.toLowerCase().includes(state.searchTerm)
+        );
     }
 
-    dispalyWidget()
+    return filtered;
+}
 
-</script>
+        function updateDisplay() {
+            const filteredCards = getFilteredCards();
+            
+            switch (state.currentMode) {
+                case 'flashcard':
+                    displayFlashcardMode(filteredCards);
+                    break;
+                case 'quiz':
+                    displayQuizMode(filteredCards);
+                    break;
+                case 'spaced':
+                    displaySpacedMode(filteredCards);
+                    break;
+            }
 
+            updateProgress();
+        }
+
+// Flashcard Mode Functions
+        function displayFlashcardMode(cards) {
+            if (cards.length === 0) {
+                mainContent.innerHTML = '<div class="flashcard"><p>No cards match your criteria</p></div>';
+                return;
+            }
+
+            const card = cards[state.currentIndex];
+            mainContent.innerHTML = `
+                <div class="flashcard" onclick="flipCard()">
+                    <h2>${state.isFlipped ? 'Definition' : 'Term'}</h2>
+                    <p class="card-content">${state.isFlipped ? card.definition : card.term}</p>
+                </div>
+                <div class="controls">
+                    <button class="btn" onclick="previousCard()" ${state.currentIndex === 0 ? 'disabled' : ''}>Previous</button>
+                    <button class="btn" onclick="flipCard()">Flip</button>
+                    <button class="btn" onclick="markCard('mastered')">Mark as Mastered</button>
+                    <button class="btn" onclick="markCard('difficult')">Mark as Difficult</button>
+                    <button class="btn" onclick="nextCard()" ${state.currentIndex === cards.length - 1 ? 'disabled' : ''}>Next</button>
+                </div>
+                <div class="card-status">
+                    Card ${state.currentIndex + 1} of ${cards.length}
+                    ${state.progress.mastered.has(card.term) ? '<span class="status mastered">Mastered</span>' : ''}
+                    ${state.progress.difficult.has(card.term) ? '<span class="status difficult">Difficult</span>' : ''}
+                </div>
+            `;
+        }
+
+        function flipCard() {
+            state.isFlipped = !state.isFlipped;
+            updateDisplay();
+        }
+
+        function nextCard() {
+            const cards = getFilteredCards();
+            if (state.currentIndex < cards.length - 1) {
+                state.currentIndex++;
+                state.isFlipped = false;
+                updateDisplay();
+            }
+        }
+
+        function previousCard() {
+            if (state.currentIndex > 0) {
+                state.currentIndex--;
+                state.isFlipped = false;
+                updateDisplay();
+            }
+        }
+
+        // Quiz Mode Functions
+        function displayQuizMode(cards) {
+            if (cards.length < 4) {
+                mainContent.innerHTML = '<div class="quiz-container"><p>Need at least 4 cards for quiz mode. Please select more cards or change filters.</p></div>';
+                return;
+            }
+
+            const currentCard = cards[state.currentIndex];
+            const options = generateQuizOptions(currentCard, cards);
+
+            mainContent.innerHTML = `
+                <div class="quiz-container">
+                    <div class="quiz-progress">Question ${state.currentIndex + 1} of ${cards.length}</div>
+                    <div class="quiz-score">Score: ${state.quizScore.correct}/${state.quizScore.total}</div>
+                    <h2>Definition:</h2>
+                    <p class="quiz-question">${currentCard.definition}</p>
+                    <h3>Choose the correct term:</h3>
+                    <div class="quiz-options">
+                        ${options.map((option, index) => `
+                            <div class="quiz-option" onclick="checkAnswer('${option}', '${currentCard.term}')">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateQuizOptions(currentCard, cards) {
+            const options = [currentCard.term];
+            const availableCards = cards.filter(card => card.term !== currentCard.term);
+            
+            // Randomly select 3 other terms
+            while (options.length < 4 && availableCards.length > 0) {
+                const randomIndex = Math.floor(Math.random() * availableCards.length);
+                const randomTerm = availableCards[randomIndex].term;
+                if (!options.includes(randomTerm)) {
+                    options.push(randomTerm);
+                }
+                availableCards.splice(randomIndex, 1);
+            }
+
+            // Shuffle options
+            return options.sort(() => Math.random() - 0.5);
+        }
+
+        function checkAnswer(selected, correct) {
+            const isCorrect = selected === correct;
+            state.quizScore.total++;
+            if (isCorrect) {
+                state.quizScore.correct++;
+                state.progress.learning.add(correct);
+            } else {
+                state.progress.difficult.add(correct);
+            }
+
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                const optionText = option.textContent.trim();
+                if (optionText === selected) {
+                    option.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                if (optionText === correct && !isCorrect) {
+                    option.classList.add('correct');
+                }
+                option.style.pointerEvents = 'none';
+            });
+
+            saveProgress();
+
+            // Add next button after answer
+            setTimeout(() => {
+                if (state.currentIndex < getFilteredCards().length - 1) {
+                    state.currentIndex++;
+                    updateDisplay();
+                } else {
+                    showQuizSummary();
+                }
+            }, 1500);
+        }
+
+        function showQuizSummary() {
+            const percentage = Math.round((state.quizScore.correct / state.quizScore.total) * 100);
+            mainContent.innerHTML = `
+                <div class="quiz-summary">
+                    <h2>Quiz Complete!</h2>
+                    <p>Final Score: ${state.quizScore.correct}/${state.quizScore.total} (${percentage}%)</p>
+                    <div class="summary-controls">
+                        <button class="btn" onclick="restartQuiz()">Try Again</button>
+                        <button class="btn" onclick="reviewMissedCards()">Review Missed Cards</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function restartQuiz() {
+            state.currentIndex = 0;
+            state.quizScore = { correct: 0, total: 0 };
+            updateDisplay();
+        }
+
+        // Spaced Repetition Functions
+        function initializeSpacedRepetition() {
+            const saved = localStorage.getItem('spacedRepetitionData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                state.spacedRepetition = {
+                    ...state.spacedRepetition,
+                    ...data
+                };
+            } else {
+                // Initialize with all cards at level 0
+                flashcards.forEach(card => {
+                    if (!state.spacedRepetition.nextReview[card.term]) {
+                        state.spacedRepetition.nextReview[card.term] = {
+                            level: 0,
+                            nextDate: new Date().toISOString()
+                        };
+                    }
+                });
+            }
+            updateSpacedRepetitionQueue();
+        }
+
+        function updateSpacedRepetitionQueue() {
+            const now = new Date();
+            state.spacedRepetition.queue = flashcards
+                .filter(card => {
+                    const reviewData = state.spacedRepetition.nextReview[card.term];
+                    return reviewData && new Date(reviewData.nextDate) <= now;
+                })
+                .sort((a, b) => {
+                    return new Date(state.spacedRepetition.nextReview[a.term].nextDate) -
+                           new Date(state.spacedRepetition.nextReview[b.term].nextDate);
+                });
+        }
+
+// Spaced Repetition Display Functions
+        function displaySpacedMode(cards) {
+            if (state.spacedRepetition.queue.length === 0) {
+                mainContent.innerHTML = `
+                    <div class="spaced-container">
+                        <h2>All caught up!</h2>
+                        <p>No cards are due for review right now.</p>
+                        <p>Next review scheduled for: ${getNextReviewTime()}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const currentCard = state.spacedRepetition.queue[0];
+            const reviewData = state.spacedRepetition.nextReview[currentCard.term];
+
+            mainContent.innerHTML = `
+                <div class="flashcard" onclick="flipCard()">
+                    <div class="spaced-info">Level ${reviewData.level} • Due: ${formatDate(reviewData.nextDate)}</div>
+                    <h2>${state.isFlipped ? 'Definition' : 'Term'}</h2>
+                    <p class="card-content">${state.isFlipped ? currentCard.definition : currentCard.term}</p>
+                </div>
+                <div class="spaced-controls">
+                    <button class="btn btn-difficult" onclick="handleSpacedResponse(false)">Difficult</button>
+                    <button class="btn btn-flip" onclick="flipCard()">Flip</button>
+                    <button class="btn btn-easy" onclick="handleSpacedResponse(true)">Easy</button>
+                </div>
+                <div class="spaced-progress">
+                    Cards remaining today: ${state.spacedRepetition.queue.length}
+                </div>
+            `;
+        }
+
+        function handleSpacedResponse(wasEasy) {
+            const currentCard = state.spacedRepetition.queue[0];
+            const reviewData = state.spacedRepetition.nextReview[currentCard.term];
+
+            if (wasEasy) {
+                reviewData.level = Math.min(reviewData.level + 1, state.spacedRepetition.levels.length - 1);
+            } else {
+                reviewData.level = Math.max(0, reviewData.level - 1);
+            }
+
+            // Calculate next review date
+            const days = state.spacedRepetition.levels[reviewData.level];
+            const nextDate = new Date();
+            nextDate.setDate(nextDate.getDate() + days);
+            reviewData.nextDate = nextDate.toISOString();
+
+            // Update queue
+            state.spacedRepetition.queue.shift();
+            saveSpacedRepetitionData();
+            updateDisplay();
+        }
+
+        // Custom Sets Functions
+        function createCustomSet() {
+            const setName = prompt('Enter a name for your custom study set:');
+            if (!setName) return;
+
+            state.customSets[setName] = {
+                terms: [],
+                created: new Date().toISOString(),
+                lastStudied: null
+            };
+
+            saveCustomSets();
+            displayCustomSetEditor(setName);
+        }
+
+        function displayCustomSetEditor(setName) {
+            const set = state.customSets[setName];
+            const allTerms = flashcards.map(card => card.term);
+
+            mainContent.innerHTML = `
+                <div class="custom-set-editor">
+                    <h2>Editing: ${setName}</h2>
+                    <div class="term-selector">
+                        <div class="available-terms">
+                            <h3>Available Terms</h3>
+                            <input type="text" class="search-input" placeholder="Search terms..." 
+                                   onkeyup="filterAvailableTerms(this.value)">
+                            <div class="term-list" id="availableTerms">
+                                ${allTerms
+                                    .filter(term => !set.terms.includes(term))
+                                    .map(term => `
+                                        <div class="term-item" onclick="addToCustomSet('${setName}', '${term}')">
+                                            ${term}
+                                        </div>
+                                    `).join('')}
+                            </div>
+                        </div>
+                        <div class="selected-terms">
+                            <h3>Selected Terms</h3>
+                            <div class="term-list" id="selectedTerms">
+                                ${set.terms.map(term => `
+                                    <div class="term-item" onclick="removeFromCustomSet('${setName}', '${term}')">
+                                        ${term}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="set-controls">
+                        <button class="btn" onclick="saveCustomSet('${setName}')">Save Set</button>
+                        <button class="btn" onclick="deleteCustomSet('${setName}')">Delete Set</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Progress Tracking and Storage
+        function saveProgress() {
+            const progressData = {
+                mastered: Array.from(state.progress.mastered),
+                difficult: Array.from(state.progress.difficult),
+                learning: Array.from(state.progress.learning)
+            };
+            localStorage.setItem('biologyFlashcardsProgress', JSON.stringify(progressData));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('biologyFlashcardsProgress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                state.progress = {
+                    mastered: new Set(data.mastered),
+                    difficult: new Set(data.difficult),
+                    learning: new Set(data.learning)
+                };
+            }
+        }
+
+        function saveSpacedRepetitionData() {
+            localStorage.setItem('spacedRepetitionData', JSON.stringify({
+                nextReview: state.spacedRepetition.nextReview
+            }));
+        }
+
+        function saveCustomSets() {
+            localStorage.setItem('customSets', JSON.stringify(state.customSets));
+        }
+
+        function loadCustomSets() {
+            const saved = localStorage.getItem('customSets');
+            if (saved) {
+                state.customSets = JSON.parse(saved);
+            }
+        }
+
+        // Utility Functions
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString();
+        }
+
+        function getNextReviewTime() {
+            const nextReviews = Object.values(state.spacedRepetition.nextReview)
+                .map(review => new Date(review.nextDate))
+                .filter(date => date > new Date())
+                .sort((a, b) => a - b);
+            
+            return nextReviews.length > 0 
+                ? formatDate(nextReviews[0]) 
+                : 'No upcoming reviews';
+        }
+
+        // Initialize the application
+        init();
+    </script>
 </body>
 </html>
